@@ -1,0 +1,23 @@
+.scene {
+	-fx-background-color: #6169F9;
+} 
+
+.songsInputField {
+	-fx-font-size: 110%;
+	-fx-font-family: 'Arial', sans-serif;
+	-fx-background-radius: 4px;
+	-fx-border-color: #273B73;
+	-fx-border-radius: 4px;
+}
+
+.downloadButton {
+	-fx-background-color: transparent;
+	-fx-text-fill: white;
+	-fx-border-color: transparent;
+}
+
+.downloadButton:disabled {
+	-fx-background-color: transparent;
+	-fx-opacity: 1;
+}
+
