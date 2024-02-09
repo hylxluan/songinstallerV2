@@ -91,6 +91,7 @@ public class SongInstallerV2Components {
 		imageView.setScaleX(1.0);
 		imageView.setScaleY(1.0);
 		this.downloadButton.setGraphic(imageView);
+		this.downloadButton.getStyleClass().add("downloadButton");
 	}
 	
 	

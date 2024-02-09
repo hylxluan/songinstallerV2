@@ -2,6 +2,8 @@ package application;
 	
 
 import application.components.SongInstallerV2Components;
+import application.services.DownloadManager;
+import application.services.MP3DownloadManager;
 import application.utils.ResourceLoader;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -21,6 +23,13 @@ public class SongInstallerV2 extends Application {
 		
 		SongInstallerV2Components components = new SongInstallerV2Components();
 		components.initializeUI(stage);
+		MP3DownloadManager manager = new MP3DownloadManager();
+		manager.initializeManager(components);
+		
+		if (manager instanceof DownloadManager) {
+			manager.downloadSongs();
+		}
+		
 		stage.show();
 	}
 	
