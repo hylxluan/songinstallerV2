@@ -1,6 +1,8 @@
 package application.components;
 
 import application.utils.ResourceLoader;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,6 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,17 +34,21 @@ public class SongInstallerV2Components {
 		createTextArea();
 		createArrowLabel();
 		createDownloadButton();
+		createLoadingAnimation();
 		root.setTop(this.downloadLabel);
 		root.setCenter(this.songsInputField);
 		root.setLeft(this.arrowLabel);
 		root.setBottom(this.downloadButton);
+		root.setRight(this.loadingLabel);
 		BorderPane.setAlignment(this.downloadLabel, Pos.TOP_CENTER);
 		BorderPane.setAlignment(this.arrowLabel, Pos.BOTTOM_LEFT);
 		BorderPane.setAlignment(this.downloadButton, Pos.BOTTOM_CENTER);
-		BorderPane.setMargin(this.downloadLabel, new Insets(-70, 0, 0, -20));
-		BorderPane.setMargin(this.songsInputField, new Insets(-160, 0, 0, -285));
+		BorderPane.setAlignment(this.loadingLabel, Pos.BOTTOM_RIGHT);
+		BorderPane.setMargin(this.downloadLabel, new Insets(-70, 0, 0, -25));
+		BorderPane.setMargin(this.songsInputField, new Insets(-160, 0, 0, -155));
 		BorderPane.setMargin(this.arrowLabel, new Insets(20, 0, -40, 160));
 		BorderPane.setMargin(this.downloadButton, new Insets(-58, 5, 115, -15));
+		BorderPane.setMargin(this.loadingLabel, new Insets(0, 375, 0, -285));
 		root.getStyleClass().add("scene");
 		stage.setScene(scene);
 	}
@@ -94,6 +101,19 @@ public class SongInstallerV2Components {
 		this.downloadButton.getStyleClass().add("downloadButton");
 	}
 	
-	
+	private void createLoadingAnimation() {
+		this.loadingLabel = new Label();
+		this.loadingLabel.setMaxHeight(50);
+		this.loadingLabel.setMinHeight(50);
+		this.loadingLabel.setMaxWidth(50);
+		this.loadingLabel.setMinWidth(50);
+		ImageView imageView = new ImageView(ResourceLoader.loadImage("/images/loading.gif", SongInstallerV2Components.class));
+		imageView.setFitHeight(50);
+		imageView.setFitWidth(50);
+		imageView.setScaleX(1);
+		imageView.setScaleY(1);
+		this.loadingLabel.setGraphic(imageView);
+		this.loadingLabel.getStyleClass().add("loading");
+	}
 	
 }

@@ -10,7 +10,7 @@ import javafx.util.Duration;
 public class MP3DownloadManager implements DownloadManager{
 
 	private SongInstallerV2Components components;
-	private AtomicBoolean isClicked = new AtomicBoolean(false);
+	AtomicBoolean isClicked = new AtomicBoolean();
 	
 	public void initializeManager(SongInstallerV2Components components) {
 		this.components = components;
@@ -34,41 +34,61 @@ public class MP3DownloadManager implements DownloadManager{
 		});
 		
 	}
+	
+	private void handleLoadingLabel() {
+		this.components.getLoadingLabel().setDisable(true);
+		this.components.getLoadingLabel().setVisible(false);
+		this.components.getLoadingLabel().setScaleX(0);
+		this.components.getLoadingLabel().setScaleY(0);
+	}
+	
 
 	@Override
 	public void downloadSongs() {
-		
+		handleLoadingLabel();
 		handleSongsInputField();
-		ScaleTransition scaleTransition = new ScaleTransition();
-		scaleTransition.setNode(components.getDownloadButton());
+		ScaleTransition downloadScaleTransition = new ScaleTransition();
+		ScaleTransition loadingScaleTransition = new ScaleTransition();
+		downloadScaleTransition.setNode(components.getDownloadButton());
+		loadingScaleTransition.setNode(components.getLoadingLabel());
 		
 		this.components.getDownloadButton().setOnMouseClicked(events -> {
-			scaleTransition.setDuration(Duration.millis(300));
-			scaleTransition.setToX(0);
-			scaleTransition.setToY(0);
-			scaleTransition.play();
+			downloadScaleTransition.setDuration(Duration.millis(300));
+			downloadScaleTransition.setToX(0);
+			downloadScaleTransition.setToY(0);
+			downloadScaleTransition.play();
 			this.components.getDownloadButton().setCursor(Cursor.DEFAULT);
 			isClicked.set(true);
 			this.components.getDownloadButton().setDisable(true);
+			this.components.getLoadingLabel().setVisible(true);
+			this.components.getLoadingLabel().setDisable(false);
+			loadingScaleTransition.setDuration(Duration.millis(700));
+			loadingScaleTransition.setDelay(Duration.millis(600));
+			loadingScaleTransition.setFromX(0);
+			loadingScaleTransition.setFromY(0);
+			loadingScaleTransition.setToX(1.2);
+			loadingScaleTransition.setToY(1.2);
+			loadingScaleTransition.play();
 		});
 		
 		this.components.getDownloadButton().setOnMouseEntered(events -> {
 			if (!isClicked.get()) {
 				this.components.getDownloadButton().setCursor(Cursor.HAND);
-				scaleTransition.setDuration(Duration.millis(60));
-				scaleTransition.setToX(1.2);
-				scaleTransition.setToY(1.2);
-				scaleTransition.play();
+				downloadScaleTransition.setDuration(Duration.millis(60));
+				downloadScaleTransition.setToX(1.2);
+				downloadScaleTransition.setToY(1.2);
+				downloadScaleTransition.play();
 			}
 		});
 		
 		this.components.getDownloadButton().setOnMouseExited(events -> {
 			if (!isClicked.get()) {
-				scaleTransition.setToX(1.0);
-				scaleTransition.setToY(1.0);
-				scaleTransition.play();
+				downloadScaleTransition.setToX(1.0);
+				downloadScaleTransition.setToY(1.0);
+				downloadScaleTransition.play();
 			}
 		});
+		
 	}
 	
 }
