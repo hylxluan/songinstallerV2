@@ -1,16 +1,20 @@
 package application.services;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+
 
 import application.components.SongInstallerV2Components;
+import application.download.SongDownloader;
 import javafx.animation.ScaleTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.util.Duration;
 
 public class MP3DownloadManager implements DownloadManager{
 
 	private SongInstallerV2Components components;
-	AtomicBoolean isClicked = new AtomicBoolean();
+	BooleanProperty isClicked = new SimpleBooleanProperty();
 	
 	public void initializeManager(SongInstallerV2Components components) {
 		this.components = components;
@@ -53,6 +57,7 @@ public class MP3DownloadManager implements DownloadManager{
 		loadingScaleTransition.setNode(components.getLoadingLabel());
 		
 		this.components.getDownloadButton().setOnMouseClicked(events -> {
+			String[] songList = this.components.getSongsInputField().getText().split(" |\\n");
 			downloadScaleTransition.setDuration(Duration.millis(300));
 			downloadScaleTransition.setToX(0);
 			downloadScaleTransition.setToY(0);
@@ -60,6 +65,7 @@ public class MP3DownloadManager implements DownloadManager{
 			this.components.getDownloadButton().setCursor(Cursor.DEFAULT);
 			isClicked.set(true);
 			this.components.getDownloadButton().setDisable(true);
+			this.components.getDownloadButton().setVisible(false);
 			this.components.getLoadingLabel().setVisible(true);
 			this.components.getLoadingLabel().setDisable(false);
 			loadingScaleTransition.setDuration(Duration.millis(700));
@@ -69,6 +75,35 @@ public class MP3DownloadManager implements DownloadManager{
 			loadingScaleTransition.setToX(1.2);
 			loadingScaleTransition.setToY(1.2);
 			loadingScaleTransition.play();
+			
+			SongDownloader downloader = new SongDownloader();
+			Task<Void> downloadTask = new Task<Void>() {
+				
+				@Override
+				protected Void call() throws Exception {
+					downloader.initializeDownload(songList);
+					return null;
+				}
+			};
+			
+			downloadTask.setOnSucceeded(event -> {
+				loadingScaleTransition.setDuration(Duration.millis(600));
+				loadingScaleTransition.setToX(0);
+				loadingScaleTransition.setToY(0);
+				loadingScaleTransition.play();
+				this.components.getLoadingLabel().setDisable(true);
+				this.components.getLoadingLabel().setVisible(false);
+				this.components.getDownloadButton().setVisible(true);
+				downloadScaleTransition.setDuration(Duration.millis(300));
+				downloadScaleTransition.setToX(1.0);
+				downloadScaleTransition.setToY(1.0);
+				downloadScaleTransition.play();
+				this.components.getDownloadButton().setDisable(false);
+				this.components.getDownloadButton().setVisible(true);
+				isClicked.set(false);
+			});
+			
+			new Thread(downloadTask).start();
 		});
 		
 		this.components.getDownloadButton().setOnMouseEntered(events -> {

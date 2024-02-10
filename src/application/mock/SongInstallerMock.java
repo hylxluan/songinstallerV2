@@ -19,18 +19,18 @@ public class SongInstallerMock {
 		System.arraycopy(commandList, 0, songList, 0, commandList.length);
 		System.arraycopy(songs, 0, songList, commandList.length, songs.length);
 		
-		ProcessBuilder processBuilder = new ProcessBuilder(songList);
-		processBuilder.inheritIO();
+		//ProcessBuilder processBuilder = new ProcessBuilder(songList);
+		//processBuilder.inheritIO();
 		
 		
-		try {
+		/*try {
 			
 			Process process = processBuilder.start();
 			process.waitFor();
 			
 		} catch (IOException | InterruptedException ex) {
 			ex.printStackTrace();
-		}
+		}*/
 		
 		
 		
